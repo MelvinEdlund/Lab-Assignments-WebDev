@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blackjack</title>
+    <link rel="stylesheet" href="css/style.css" />
+
+    <script src="js/auth/storage.js" defer></script>
+    <script src="js/game/deck.js" defer></script>
+    <script src="js/game/game.js" defer></script>
+  </head>
+  <body>
+    <h1>Blackjack</h1>
+
+    <!-- TOPPMENY: visas alltid -->
+    <header>
+      <span>Inloggad som: <strong id="usernameDisplay"></strong></span>
+      <br />
+      <span>Saldo: <strong id="balanceDisplay"></strong> kr</span>
+      <br />
+      <button id="logoutBtn">Logga ut</button>
+    </header>
+    <hr />
+    <!-- SPELPLAN -->
+    <main>
+      <!-- DEALERNS KORT -->
+      <section id="dealerSection">
+        <h2>Dealer <span id="dealerScore"></span></h2>
+        <div id="dealerCards"></div>
+      </section>
+
+      <!-- SPELARENS KORT -->
+      <section id="playerSection">
+        <h2>Du <span id="playerScore"></span></h2>
+        <div id="playerCards"></div>
+      </section>
+
+      <!-- SPELMEDDELANDE: "Du vann!" / "Bust!" etc -->
+      <div id="gameMessage"></div>
+
+      <!-- INSATS & STARTA -->
+      <div id="betArea">
+        <input type="number" id="betAmount" placeholder="Insats i kr" min="1" />
+        <button id="startBtn">Satsa & Starta</button>
+      </div>
+
+      <!-- HIT & STAND — dolda från start -->
+      <div id="actionButtons" style="display: none">
+        <button id="hitBtn">Hit</button>
+        <button id="standBtn">Stand</button>
+      </div>
+
+      <!-- SPELA IGEN — dold från start -->
+      <button id="playAgainBtn" style="display: none">Spela igen</button>
+    </main>
+  </body>
+</html>
