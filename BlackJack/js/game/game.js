@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("hitBtn").addEventListener("click", hit);
   document.getElementById("standBtn").addEventListener("click", stand);
   document.getElementById("playAgainBtn").addEventListener("click", playAgain);
+  document.getElementById("splitBtn").addEventListener("click", splitHand);
+  document.getElementById("doubleBtn").addEventListener("click", doubleDown);
 });
 
 // ==============================
@@ -44,7 +46,10 @@ function setupLogout() {
 // ==============================
 
 let deck;
-let playerHand;
+let playerHands = [];
+let activeHandIndex = 0;
+let handBets = [];
+let handStates = []; // { isComplete, isSplitAces, hasDoubled }
 let dealerHand;
 let currentBet = 0;
 
@@ -72,6 +77,41 @@ function calculateHandValue(hand) {
   return total;
 }
 
+function isBlackjack(hand) {
+  if (!hand || hand.length !== 2) return false;
+  const hasAce = hand.some((card) => card.rank === "A");
+  const hasTenValue = hand.some(
+    (card) =>
+      card.rank === "10" ||
+      card.rank === "J" ||
+      card.rank === "Q" ||
+      card.rank === "K",
+  );
+  return hasAce && hasTenValue;
+}
+
+function getHandDisplayValue(hand) {
+  let total = 0;
+  let aces = 0;
+
+  for (let card of hand) {
+    total += card.value;
+    if (card.rank === "A") {
+      aces++;
+    }
+  }
+
+  // Compute the minimum value (all aces as 1)
+  const minValue = total - aces * 10;
+  const hasSoftTotal = aces > 0 && minValue + 10 <= 21;
+
+  if (hasSoftTotal && minValue !== minValue + 10) {
+    return `${minValue}/${minValue + 10}`;
+  }
+
+  return `${calculateHandValue(hand)}`;
+}
+
 function addCardToHand(card, containerId) {
   // 1. Hitta rätt div (playerCards eller dealerCards)
   const container = document.getElementById(containerId);
@@ -97,34 +137,74 @@ function getCardImage(card) {
 }
 
 function hit() {
+  const hand = playerHands[activeHandIndex];
   const card = drawCard(deck);
-  playerHand.push(card);
-  addCardToHand(card, "playerCards");
+  hand.push(card);
+  renderHand(activeHandIndex);
 
-  const playerValue = calculateHandValue(playerHand);
-  document.getElementById("playerScore").textContent = `(${playerValue})`;
-
-  if (playerValue > 21) {
-    endRound("bust");
-  } else if (playerValue === 21) {
-    stand();
+  const value = calculateHandValue(hand);
+  if (value > 21) {
+    handStates[activeHandIndex].isComplete = true;
+    goToNextHandOrDealer();
+  } else if (value === 21) {
+    handStates[activeHandIndex].isComplete = true;
+    goToNextHandOrDealer();
+  } else if (handStates[activeHandIndex].isSplitAces) {
+    handStates[activeHandIndex].isComplete = true;
+    goToNextHandOrDealer();
   }
+
+  updateActionButtons();
+}
+
+function stand() {
+  handStates[activeHandIndex].isComplete = true;
+  goToNextHandOrDealer();
 }
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function stand() {
-  // Visa dealerns dolda kort
+function revealDealerHand() {
   const dealerCardsDiv = document.getElementById("dealerCards");
   dealerCardsDiv.innerHTML = "";
   addCardToHand(dealerHand[0], "dealerCards");
   addCardToHand(dealerHand[1], "dealerCards");
 
-  const dealerInitialValue = calculateHandValue(dealerHand);
   document.getElementById("dealerScore").textContent =
-    `(${dealerInitialValue})`;
+    `(${getHandDisplayValue(dealerHand)})`;
+}
+
+function resolveBlackjackIfNeeded() {
+  const user = getCurrentUser();
+  const playerHasBlackjack = isBlackjack(playerHands[0]);
+  if (!playerHasBlackjack) return false;
+
+  revealDealerHand();
+
+  const dealerHasBlackjack = isBlackjack(dealerHand);
+  const messageEl = document.getElementById("gameMessage");
+
+  if (dealerHasBlackjack) {
+    messageEl.textContent = "Blackjack! Oavgjort.";
+  } else {
+    const payout = handBets[0] * 1.5;
+    user.balance += payout;
+    messageEl.textContent = `Blackjack! Du vann ${payout} kr.`;
+  }
+
+  document.getElementById("balanceDisplay").textContent = user.balance;
+  setCurrentUser(user);
+
+  document.getElementById("actionButtons").style.display = "none";
+  document.getElementById("playAgainBtn").style.display = "block";
+  return true;
+}
+
+async function runDealerAndResolve() {
+  // Visa dealerns dolda kort
+  revealDealerHand();
 
   // Dealer drar till minst 17
   while (calculateHandValue(dealerHand) < 17) {
@@ -133,40 +213,45 @@ async function stand() {
     dealerHand.push(card);
     addCardToHand(card, "dealerCards");
 
-    const dealerValue = calculateHandValue(dealerHand);
-    document.getElementById("dealerScore").textContent = `(${dealerValue})`;
+    document.getElementById("dealerScore").textContent =
+      `(${getHandDisplayValue(dealerHand)})`;
   }
 
-  const playerValue = calculateHandValue(playerHand);
-  const dealerValue = calculateHandValue(dealerHand);
-
-  document.getElementById("playerScore").textContent = `(${playerValue})`;
-  document.getElementById("dealerScore").textContent = `(${dealerValue})`;
-
-  if (dealerValue > 21) {
-    endRound("win");
-  } else if (playerValue > dealerValue) {
-    endRound("win");
-  } else if (playerValue < dealerValue) {
-    endRound("lose");
-  } else {
-    endRound("push");
-  }
+  resolveHands();
 }
 
-function endRound(result) {
+function resolveHands() {
   const messageEl = document.getElementById("gameMessage");
   const user = getCurrentUser();
+  const dealerValue = calculateHandValue(dealerHand);
+  const results = [];
 
-  if (result === "win") {
-    messageEl.textContent = "Du vann!";
-    user.balance += currentBet;
-  } else if (result === "lose" || result === "bust") {
-    messageEl.textContent = "Du förlorade!";
-    user.balance -= currentBet;
-  } else {
-    messageEl.textContent = "Oavgjort!";
-  }
+  playerHands.forEach((hand, index) => {
+    const handValue = calculateHandValue(hand);
+    const bet = handBets[index];
+
+    if (handValue > 21) {
+      user.balance -= bet;
+      results.push(`Hand ${index + 1}: förlust`);
+      return;
+    }
+
+    if (dealerValue > 21 || handValue > dealerValue) {
+      user.balance += bet;
+      results.push(`Hand ${index + 1}: vinst`);
+      return;
+    }
+
+    if (handValue < dealerValue) {
+      user.balance -= bet;
+      results.push(`Hand ${index + 1}: förlust`);
+      return;
+    }
+
+    results.push(`Hand ${index + 1}: oavgjort`);
+  });
+
+  messageEl.textContent = results.join(" | ");
 
   // Uppdatera saldo i UI och localstorage
   document.getElementById("balanceDisplay").textContent = user.balance;
@@ -199,7 +284,10 @@ function startGame() {
   currentBet = bet;
 
   // Rensa kortdivarna från föregående runda
-  document.getElementById("playerCards").innerHTML = "";
+  document.getElementById("playerHand0").innerHTML = "";
+  document.getElementById("playerHand1").innerHTML = "";
+  document.getElementById("playerScore0").textContent = "";
+  document.getElementById("playerScore1").textContent = "";
   document.getElementById("dealerCards").innerHTML = "";
   document.getElementById("gameMessage").textContent = "";
 
@@ -208,46 +296,177 @@ function startGame() {
   shuffleDeck(deck);
 
   //Skapa tomma händer
-  playerHand = createHand();
+  playerHands = [createHand()];
+  activeHandIndex = 0;
+  handBets = [currentBet];
+  handStates = [{ isComplete: false, isSplitAces: false, hasDoubled: false }];
   dealerHand = createHand();
 
   // Dela ut 2 kort vardera
-  playerHand.push(drawCard(deck));
+  playerHands[0].push(drawCard(deck));
   dealerHand.push(drawCard(deck));
-  playerHand.push(drawCard(deck));
+  playerHands[0].push(drawCard(deck));
   dealerHand.push(drawCard(deck));
 
   // Visa spelarens kort
-  addCardToHand(playerHand[0], "playerCards");
-  addCardToHand(playerHand[1], "playerCards");
+  renderHand(0);
 
   // Visa dealerns kort, bara ett, andra dolt
   addCardToHand(dealerHand[0], "dealerCards");
   addCardToHand({ rank: "back", suit: "" }, "dealerCards"); // Dolt
 
-  const playerValue = calculateHandValue(playerHand);
-  document.getElementById("playerScore").textContent = `(${playerValue})`;
-
-  const dealerVisibleValue = calculateHandValue([dealerHand[0]]);
   document.getElementById("dealerScore").textContent =
-    `(${dealerVisibleValue})`;
+    `(${getHandDisplayValue([dealerHand[0]])})`;
+
+  document.getElementById("playerHandRow1").classList.add("hidden");
+  setActiveHandUI();
+  updateActionButtons();
 
   // Visa Hit/Stand, dölj satsa-knappen
   document.getElementById("actionButtons").style.display = "block";
   document.getElementById("betArea").style.display = "none";
   document.getElementById("playAgainBtn").style.display = "none";
+
+  if (resolveBlackjackIfNeeded()) {
+    return;
+  }
 }
 
 function playAgain() {
-  document.getElementById("playerCards").innerHTML = "";
+  document.getElementById("playerHand0").innerHTML = "";
+  document.getElementById("playerHand1").innerHTML = "";
+  document.getElementById("playerScore0").textContent = "";
+  document.getElementById("playerScore1").textContent = "";
   document.getElementById("dealerCards").innerHTML = "";
   document.getElementById("gameMessage").textContent = "";
-  document.getElementById("playerScore").textContent = "";
   document.getElementById("dealerScore").textContent = "";
 
   document.getElementById("actionButtons").style.display = "none";
   document.getElementById("betArea").style.display = "flex";
   document.getElementById("playAgainBtn").style.display = "none";
 
+  document.getElementById("playerHandRow1").classList.add("hidden");
+
   currentBet = 0;
+}
+
+function getHandContainerId(index) {
+  return index === 0 ? "playerHand0" : "playerHand1";
+}
+
+function getScoreId(index) {
+  return index === 0 ? "playerScore0" : "playerScore1";
+}
+
+function renderHand(index) {
+  const hand = playerHands[index];
+  const containerId = getHandContainerId(index);
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  for (let card of hand) {
+    addCardToHand(card, containerId);
+  }
+  document.getElementById(getScoreId(index)).textContent =
+    `(${getHandDisplayValue(hand)})`;
+}
+
+function setActiveHandUI() {
+  const row0 = document.getElementById("playerHandRow0");
+  const row1 = document.getElementById("playerHandRow1");
+  row0.classList.toggle("active-hand", activeHandIndex === 0);
+  row1.classList.toggle("active-hand", activeHandIndex === 1);
+}
+
+function getTotalBets() {
+  return handBets.reduce((total, bet) => total + bet, 0);
+}
+
+function canSplit() {
+  const hand = playerHands[activeHandIndex];
+  if (!hand || hand.length !== 2) return false;
+  if (playerHands.length > 1) return false;
+  if (hand[0].rank !== hand[1].rank) return false;
+  const user = getCurrentUser();
+  const additionalBet = handBets[activeHandIndex];
+  return user.balance >= getTotalBets() + additionalBet;
+}
+
+function canDouble() {
+  const hand = playerHands[activeHandIndex];
+  if (!hand || hand.length !== 2) return false;
+  const user = getCurrentUser();
+  const additionalBet = handBets[activeHandIndex];
+  return user.balance >= getTotalBets() + additionalBet;
+}
+
+function updateActionButtons() {
+  const splitBtn = document.getElementById("splitBtn");
+  const doubleBtn = document.getElementById("doubleBtn");
+  const betValue = handBets[activeHandIndex] ?? currentBet;
+
+  splitBtn.disabled = !canSplit();
+  doubleBtn.disabled = !canDouble();
+  doubleBtn.textContent = `Double (+${betValue})`;
+}
+
+function splitHand() {
+  if (!canSplit()) return;
+
+  const hand = playerHands[activeHandIndex];
+  const secondCard = hand.pop();
+
+  const newHand = [secondCard];
+  playerHands.push(newHand);
+
+  handBets.push(handBets[activeHandIndex]);
+  handStates.push({ isComplete: false, isSplitAces: false, hasDoubled: false });
+
+  hand.push(drawCard(deck));
+  newHand.push(drawCard(deck));
+
+  if (hand[0].rank === "A") {
+    handStates[0].isSplitAces = true;
+    handStates[1].isSplitAces = true;
+  }
+
+  document.getElementById("playerHandRow1").classList.remove("hidden");
+  renderHand(0);
+  renderHand(1);
+  setActiveHandUI();
+  updateActionButtons();
+}
+
+function doubleDown() {
+  if (!canDouble()) return;
+
+  handBets[activeHandIndex] *= 2;
+  const card = drawCard(deck);
+  playerHands[activeHandIndex].push(card);
+
+  renderHand(activeHandIndex);
+
+  handStates[activeHandIndex].hasDoubled = true;
+  handStates[activeHandIndex].isComplete = true;
+
+  goToNextHandOrDealer();
+}
+
+function goToNextHandOrDealer() {
+  if (
+    activeHandIndex === 0 &&
+    playerHands.length > 1 &&
+    !handStates[1].isComplete
+  ) {
+    activeHandIndex = 1;
+    setActiveHandUI();
+    updateActionButtons();
+    return;
+  }
+
+  if (
+    playerHands.length === 1 ||
+    (handStates[0].isComplete && handStates[1].isComplete)
+  ) {
+    runDealerAndResolve();
+  }
 }

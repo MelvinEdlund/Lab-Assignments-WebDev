@@ -60,6 +60,36 @@ section h2 {
   min-height: 120px;
 }
 
+.player-hand-row {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.player-hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 120px;
+}
+
+.hand-label {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}
+
+.active-hand {
+  outline: 3px solid #f1c40f;
+  box-shadow: 0 0 12px rgba(241, 196, 15, 0.8);
+}
+
 /* ── KORTBILDER ── */
 .card {
   width: 80px; /* fast bredd */

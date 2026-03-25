@@ -32,8 +32,17 @@
 
       <!-- SPELARENS KORT -->
       <section id="playerSection">
-        <h2>Du <span id="playerScore"></span></h2>
-        <div id="playerCards"></div>
+        <h2>Du</h2>
+
+        <div class="player-hand-row" id="playerHandRow0">
+          <div class="hand-label">Hand <span id="playerScore0"></span></div>
+          <div id="playerHand0" class="player-hand"></div>
+        </div>
+
+        <div class="player-hand-row hidden" id="playerHandRow1">
+          <div class="hand-label">Hand 2 <span id="playerScore1"></span></div>
+          <div id="playerHand1" class="player-hand"></div>
+        </div>
       </section>
 
       <!-- SPELMEDDELANDE: "Du vann!" / "Bust!" etc -->
@@ -47,8 +56,11 @@
 
       <!-- HIT & STAND — dolda från start -->
       <div id="actionButtons" style="display: none">
+        <button id="doubleBtn">Double</button>
         <button id="hitBtn">Hit</button>
         <button id="standBtn">Stand</button>
+
+        <button id="splitBtn">Split</button>
       </div>
 
       <!-- SPELA IGEN — dold från start -->
