@@ -385,7 +385,7 @@ function canSplit() {
   const hand = playerHands[activeHandIndex];
   if (!hand || hand.length !== 2) return false;
   if (playerHands.length > 1) return false;
-  if (hand[0].rank !== hand[1].rank) return false;
+  if (hand[0].value !== hand[1].value) return false;
   const user = getCurrentUser();
   const additionalBet = handBets[activeHandIndex];
   return user.balance >= getTotalBets() + additionalBet;
