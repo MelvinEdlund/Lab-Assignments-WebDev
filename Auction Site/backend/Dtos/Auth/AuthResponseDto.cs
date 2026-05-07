@@ -2,5 +2,7 @@ namespace backend.Dtos.Auth;
 
 public class AuthResponseDto
 {
-    // TODO: Steg 4 - Lägg till properties
+    public string Token { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
+    public bool IsAdmin { get; set; }
 }

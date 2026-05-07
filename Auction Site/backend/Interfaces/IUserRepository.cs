@@ -1,6 +1,10 @@
+using backend.Models;
+
 namespace backend.Interfaces;
 
 public interface IUserRepository
 {
-    // TODO: Steg 2 - Lägg till metoder
+    Task<List<User>> GetAllAsync();
+    Task<User?> GetByIdAsync(int id);
+    Task<User?> UpdateAsync(User user);
 }

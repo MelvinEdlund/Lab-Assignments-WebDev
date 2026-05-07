@@ -1,6 +1,13 @@
+using backend.Models;
+
 namespace backend.Interfaces;
 
 public interface IAuctionRepository
 {
-    // TODO: Steg 2 - Lägg till metoder
+    Task<List<Auction>> GetOpenAsync(string? search);
+    Task<List<Auction>> GetClosedAsync(string? search);
+    Task<Auction?> GetByIdAsync(int id);
+    Task<Auction> CreateAsync(Auction auction);
+    Task<Auction?> UpdateAsync(Auction auction);
+    Task<bool> DeleteAsync(int id);
 }
