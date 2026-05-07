@@ -381,7 +381,7 @@ function getTotalBets() {
   return handBets.reduce((total, bet) => total + bet, 0);
 }
 
-function canSplit() {
+function canSplit() { 
   const hand = playerHands[activeHandIndex];
   if (!hand || hand.length !== 2) return false;
   if (playerHands.length > 1) return false;
