@@ -31,6 +31,14 @@ public class AuctionsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin/all")]
+    public async Task<IActionResult> GetAllAdmin()
+    {
+        var result = await _service.GetAllAdminAsync();
+        return Ok(result);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {

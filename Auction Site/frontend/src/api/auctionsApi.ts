@@ -34,4 +34,18 @@ export const auctionsApi = {
     const res = await apiClient.put<Auction>(`/auctions/${id}`, data);
     return res.data;
   },
+
+  // Admin-metoder
+  getAll: async (): Promise<Auction[]> => {
+    const res = await apiClient.get<Auction[]>("/auctions/admin/all");
+    return res.data;
+  },
+
+  deactivate: async (id: number): Promise<void> => {
+    await apiClient.patch(`/auctions/${id}/deactivate`);
+  },
+
+  activate: async (id: number): Promise<void> => {
+    await apiClient.patch(`/auctions/${id}/activate`);
+  },
 };

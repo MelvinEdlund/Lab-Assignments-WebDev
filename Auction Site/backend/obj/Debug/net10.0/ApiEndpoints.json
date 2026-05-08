@@ -102,6 +102,16 @@
   },
   {
     "ContainingType": "backend.Controllers.AuctionsController",
+    "Method": "GetAllAdmin",
+    "RelativePath": "api/Auctions/admin/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AuctionsController",
     "Method": "GetClosed",
     "RelativePath": "api/Auctions/closed",
     "HttpMethod": "GET",
@@ -112,6 +122,22 @@
         "Name": "search",
         "Type": "System.String",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AuthController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/Auth/change-password",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "backend.Dtos.Auth.ChangePasswordDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

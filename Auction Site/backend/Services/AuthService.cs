@@ -53,4 +53,16 @@ public class AuthService
             IsAdmin = user.IsAdmin
         };
     }
+    public async Task<(bool success, string? error)> ChangePasswordAsync(int userId, ChangePasswordDto dto)
+    {
+        var user = await _db.Users.FindAsync(userId);
+        if (user == null) return (false, "Användaren hittades inte.");
+
+        if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash))
+            return (false, "Nuvarande lösenord är felaktigt.");
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        await _db.SaveChangesAsync();
+        return (true, null);
+    }
 }

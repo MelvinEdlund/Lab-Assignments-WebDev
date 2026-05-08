@@ -36,6 +36,14 @@ public class AuctionRepository : IAuctionRepository
             .OrderByDescending(a => a.EndDate)
             .ToListAsync();
     }
+    public async Task<List<Auction>> GetAllAdminAsync()
+    {
+        return await _db.Auctions
+            .Include(a => a.User)
+            .Include(a => a.Bids)
+            .OrderByDescending(a => a.StartDate)
+            .ToListAsync();
+    }
 
     public async Task<Auction?> GetByIdAsync(int id)
     {

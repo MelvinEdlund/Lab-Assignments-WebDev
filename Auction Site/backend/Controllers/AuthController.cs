@@ -1,6 +1,8 @@
 using backend.Dtos.Auth;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers;
 
@@ -33,5 +35,15 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Felaktig email eller lösenord." });
 
         return Ok(result);
+    }
+
+    [Authorize]
+    [HttpPut("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var (success, error) = await _auth.ChangePasswordAsync(userId, dto);
+        if (!success) return BadRequest(new { message = error });
+        return NoContent();
     }
 }

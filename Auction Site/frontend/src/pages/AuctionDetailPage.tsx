@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { auctionsApi } from "../api/auctionsApi";
 import { bidsApi } from "../api/bidsApi";
 import { useAuth } from "../context/AuthContext";
@@ -16,6 +16,7 @@ export default function AuctionDetailPage() {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingBid, setDeletingBid] = useState(false); // ← NY RAD
 
   useEffect(() => {
     fetchAll();
@@ -50,6 +51,23 @@ export default function AuctionDetailPage() {
     );
   };
 
+  const handleDeleteBid = async (bid: Bid) => {
+    if (!window.confirm("Vill du ångra ditt bud?")) return;
+    setDeletingBid(true);
+    try {
+      await bidsApi.delete(bid.id, auctionId);
+      const updatedBids = bids.filter((b) => b.id !== bid.id);
+      setBids(updatedBids);
+      setAuction((prev) =>
+        prev ? { ...prev, highestBid: updatedBids[0]?.amount ?? null } : prev,
+      );
+    } catch {
+      setError("Kunde inte ta bort budet. Försök igen.");
+    } finally {
+      setDeletingBid(false);
+    }
+  };
+
   if (loading) return <LoadingSpinner />;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!auction) return <p>Auktionen hittades inte.</p>;
@@ -65,7 +83,24 @@ export default function AuctionDetailPage() {
       </Link>
 
       <h1>{auction.title}</h1>
-
+      {isOwnAuction && auction.isOpen && (
+        <div style={{ marginBottom: "1rem" }}>
+          <Link
+            to={`/auctions/${auction.id}/edit`}
+            style={{
+              display: "inline-block",
+              padding: "0.4rem 1rem",
+              background: "#2c3e50",
+              color: "#fff",
+              borderRadius: "4px",
+              textDecoration: "none",
+              fontSize: "0.9rem",
+            }}
+          >
+            ✏️ Redigera auktion
+          </Link>
+        </div>
+      )}
       <div
         style={{
           display: "flex",
@@ -158,24 +193,70 @@ export default function AuctionDetailPage() {
             <p>Inga bud än.</p>
           ) : (
             <ul style={{ listStyle: "none", padding: 0 }}>
-              {bids.map((b) => (
-                <li
-                  key={b.id}
-                  style={{
-                    padding: "0.75rem",
-                    borderBottom: "1px solid #eee",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span>
-                    <strong>{b.amount} kr</strong> — {b.username}
-                  </span>
-                  <span style={{ color: "#777" }}>
-                    {new Date(b.createdAt).toLocaleString("sv-SE")}
-                  </span>
-                </li>
-              ))}
+              {bids.map((b, index) => {
+                const isLatest = index === 0;
+                const isMyBid = b.username === user?.username;
+                const canDelete = isLatest && isMyBid && isAuthenticated;
+
+                return (
+                  <li
+                    key={b.id}
+                    style={{
+                      padding: "0.75rem",
+                      borderBottom: "1px solid #eee",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>
+                      <strong>{b.amount} kr</strong> — {b.username}
+                      {isLatest && (
+                        <span
+                          style={{
+                            marginLeft: "0.5rem",
+                            fontSize: "0.75rem",
+                            background: "#fff3cd",
+                            color: "#856404",
+                            padding: "0.1rem 0.4rem",
+                            borderRadius: "4px",
+                          }}
+                        >
+                          Högst
+                        </span>
+                      )}
+                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span style={{ color: "#777", fontSize: "0.85rem" }}>
+                        {new Date(b.createdAt).toLocaleString("sv-SE")}
+                      </span>
+                      {canDelete && (
+                        <button
+                          onClick={() => handleDeleteBid(b)}
+                          disabled={deletingBid}
+                          style={{
+                            padding: "0.2rem 0.6rem",
+                            fontSize: "0.8rem",
+                            background: "transparent",
+                            border: "1px solid #e74c3c",
+                            color: "#e74c3c",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {deletingBid ? "..." : "Ångra"}
+                        </button>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </>

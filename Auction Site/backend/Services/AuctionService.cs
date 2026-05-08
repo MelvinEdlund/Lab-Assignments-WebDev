@@ -24,6 +24,11 @@ public class AuctionService
         var auctions = await _repo.GetClosedAsync(search);
         return auctions.Select(MapToDto).ToList();
     }
+    public async Task<List<AuctionResponseDto>> GetAllAdminAsync()
+    {
+        var auctions = await _repo.GetAllAdminAsync();
+        return auctions.Select(MapToDto).ToList();
+    }
 
     public async Task<AuctionResponseDto?> GetByIdAsync(int id)
     {
