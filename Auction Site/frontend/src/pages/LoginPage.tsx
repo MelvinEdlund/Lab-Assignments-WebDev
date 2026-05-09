@@ -35,45 +35,58 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "2rem auto" }}>
-      <h1>Logga in</h1>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-      >
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: "100%", padding: "0.5rem" }}
-          />
-        </label>
+    <div className="page-center">
+      <div className="form-card">
+        <h1>🔐 Logga in</h1>
 
-        <label>
-          Lösenord
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-            style={{ width: "100%", padding: "0.5rem" }}
-          />
-        </label>
+        {error && <div className="alert alert-error">{error}</div>}
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="din@email.se"
+            />
+          </div>
 
-        <button type="submit" disabled={loading} style={{ padding: "0.6rem" }}>
-          {loading ? "Loggar in..." : "Logga in"}
-        </button>
-      </form>
+          <div className="form-group">
+            <label>Lösenord</label>
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              placeholder="••••••"
+            />
+          </div>
 
-      <p style={{ marginTop: "1rem" }}>
-        Har du inget konto? <Link to="/register">Registrera dig här</Link>
-      </p>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={loading}
+            style={{ width: "100%", marginTop: "0.5rem" }}
+          >
+            {loading ? "Loggar in..." : "Logga in"}
+          </button>
+        </form>
+
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "1.25rem",
+            fontSize: "0.9rem",
+          }}
+        >
+          Har du inget konto? <Link to="/register">Registrera dig här</Link>
+        </p>
+      </div>
     </div>
   );
 }

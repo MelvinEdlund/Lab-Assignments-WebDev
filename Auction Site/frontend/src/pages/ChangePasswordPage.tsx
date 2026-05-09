@@ -21,7 +21,6 @@ export default function ChangePasswordPage() {
       setError("Det nya lösenordet och bekräftelsen matchar inte.");
       return;
     }
-
     if (newPassword.length < 6) {
       setError("Nytt lösenord måste vara minst 6 tecken.");
       return;
@@ -46,85 +45,74 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "2rem auto" }}>
-      <h1>Ändra lösenord</h1>
-      <p style={{ color: "#666" }}>
-        Inloggad som <strong>{user?.username}</strong>
-      </p>
+    <div className="page-center">
+      <div className="form-card">
+        <h1>🔑 Ändra lösenord</h1>
+        <p
+          style={{
+            textAlign: "center",
+            color: "var(--text-muted)",
+            marginBottom: "1.5rem",
+          }}
+        >
+          Inloggad som <strong>{user?.username}</strong>
+        </p>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1.2rem",
-          marginTop: "1.5rem",
-        }}
-      >
-        <label>
-          Nuvarande lösenord
-          <input
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            required
-            style={{
-              display: "block",
-              width: "100%",
-              padding: "0.5rem",
-              marginTop: "0.25rem",
-            }}
-          />
-        </label>
-
-        <label>
-          Nytt lösenord
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-            minLength={6}
-            style={{
-              display: "block",
-              width: "100%",
-              padding: "0.5rem",
-              marginTop: "0.25rem",
-            }}
-          />
-        </label>
-
-        <label>
-          Bekräfta nytt lösenord
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            style={{
-              display: "block",
-              width: "100%",
-              padding: "0.5rem",
-              marginTop: "0.25rem",
-            }}
-          />
-        </label>
-
-        {error && <p style={{ color: "#e74c3c", margin: 0 }}>{error}</p>}
+        {error && <div className="alert alert-error">{error}</div>}
         {success && (
-          <p style={{ color: "#27ae60", margin: 0 }}>
+          <div className="alert alert-success">
             ✅ Lösenordet har uppdaterats!
-          </p>
+          </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ padding: "0.6rem", fontSize: "1rem" }}
-        >
-          {loading ? "Sparar..." : "Byt lösenord"}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Nuvarande lösenord</label>
+            <input
+              type="password"
+              className="form-control"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+              placeholder="••••••"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Nytt lösenord</label>
+            <input
+              type="password"
+              className="form-control"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              minLength={6}
+              placeholder="••••••"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Bekräfta nytt lösenord</label>
+            <input
+              type="password"
+              className="form-control"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={loading}
+            style={{ width: "100%", marginTop: "0.5rem" }}
+          >
+            {loading ? "Sparar..." : "Byt lösenord"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

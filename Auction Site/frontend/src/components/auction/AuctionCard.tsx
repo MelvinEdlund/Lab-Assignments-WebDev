@@ -10,41 +10,33 @@ export default function AuctionCard({ auction }: Props) {
   const endDate = new Date(auction.endDate).toLocaleString("sv-SE");
 
   return (
-    <Link
-      to={`/auctions/${auction.id}`}
-      style={{
-        textDecoration: "none",
-        color: "inherit",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        padding: "1rem",
-        display: "block",
-        background: "#fff",
-      }}
-    >
-      <h3 style={{ margin: "0 0 0.5rem" }}>{auction.title}</h3>
-      <p style={{ margin: "0 0 0.5rem", color: "#555", fontSize: "0.9rem" }}>
+    <Link to={`/auctions/${auction.id}`} className="auction-card">
+      <div className="auction-card-header">
+        <h3 className="auction-card-title">{auction.title}</h3>
+        <span
+          className={`badge ${auction.isOpen ? "badge-success" : "badge-muted"}`}
+        >
+          {auction.isOpen ? "Öppen" : "Avslutad"}
+        </span>
+      </div>
+
+      <p className="auction-card-desc">
         {auction.description.length > 100
           ? auction.description.slice(0, 100) + "..."
           : auction.description}
       </p>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "0.9rem",
-        }}
-      >
-        <span>
+
+      <div className="auction-card-footer">
+        <span className="auction-card-price">
           <strong>{currentPrice} kr</strong>
+          {auction.highestBid && (
+            <span className="auction-card-bid-label"> (högsta bud)</span>
+          )}
         </span>
-        <span style={{ color: auction.isOpen ? "green" : "gray" }}>
-          {auction.isOpen ? "Öppen" : "Avslutad"}
-        </span>
+        <span className="auction-card-meta">av {auction.username}</span>
       </div>
-      <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#777" }}>
-        Skapad av {auction.username} • Slutar {endDate}
-      </div>
+
+      <div className="auction-card-date">Slutar {endDate}</div>
     </Link>
   );
 }

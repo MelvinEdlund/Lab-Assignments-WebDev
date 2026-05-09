@@ -47,68 +47,83 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "2rem auto" }}>
-      <h1>Registrera</h1>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-      >
-        <label>
-          Användarnamn
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{ width: "100%", padding: "0.5rem" }}
-          />
-        </label>
+    <div className="page-center">
+      <div className="form-card">
+        <h1>📝 Registrera</h1>
 
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: "100%", padding: "0.5rem" }}
-          />
-        </label>
+        {error && <div className="alert alert-error">{error}</div>}
 
-        <label>
-          Lösenord (minst 6 tecken)
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-            style={{ width: "100%", padding: "0.5rem" }}
-          />
-        </label>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Användarnamn</label>
+            <input
+              type="text"
+              className="form-control"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="dittnamn"
+            />
+          </div>
 
-        <label>
-          Bekräfta lösenord
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            minLength={6}
-            style={{ width: "100%", padding: "0.5rem" }}
-          />
-        </label>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="din@email.se"
+            />
+          </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+          <div className="form-group">
+            <label>Lösenord (minst 6 tecken)</label>
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              placeholder="••••••"
+            />
+          </div>
 
-        <button type="submit" disabled={loading} style={{ padding: "0.6rem" }}>
-          {loading ? "Registrerar..." : "Registrera"}
-        </button>
-      </form>
+          <div className="form-group">
+            <label>Bekräfta lösenord</label>
+            <input
+              type="password"
+              className="form-control"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              minLength={6}
+              placeholder="••••••"
+            />
+          </div>
 
-      <p style={{ marginTop: "1rem" }}>
-        Har du redan ett konto? <Link to="/login">Logga in här</Link>
-      </p>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={loading}
+            style={{ width: "100%", marginTop: "0.5rem" }}
+          >
+            {loading ? "Registrerar..." : "Skapa konto"}
+          </button>
+        </form>
+
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "1.25rem",
+            fontSize: "0.9rem",
+          }}
+        >
+          Har du redan ett konto? <Link to="/login">Logga in här</Link>
+        </p>
+      </div>
     </div>
   );
 }

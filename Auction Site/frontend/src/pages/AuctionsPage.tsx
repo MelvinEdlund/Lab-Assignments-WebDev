@@ -40,44 +40,24 @@ export default function AuctionsPage() {
     <div>
       <h1>Auktioner</h1>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          marginBottom: "1.5rem",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="auctions-toolbar">
         <input
           type="text"
+          className="form-control"
           placeholder="Sök på titel..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ flex: 1, minWidth: 200, padding: "0.5rem" }}
         />
-
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="filter-btns">
           <button
+            className={`btn ${filter === "open" ? "btn-primary" : "btn-ghost"}`}
             onClick={() => setFilter("open")}
-            style={{
-              padding: "0.5rem 1rem",
-              background: filter === "open" ? "#333" : "#eee",
-              color: filter === "open" ? "#fff" : "#000",
-              border: "none",
-              cursor: "pointer",
-            }}
           >
             Öppna
           </button>
           <button
+            className={`btn ${filter === "closed" ? "btn-primary" : "btn-ghost"}`}
             onClick={() => setFilter("closed")}
-            style={{
-              padding: "0.5rem 1rem",
-              background: filter === "closed" ? "#333" : "#eee",
-              color: filter === "closed" ? "#fff" : "#000",
-              border: "none",
-              cursor: "pointer",
-            }}
           >
             Avslutade
           </button>
@@ -85,19 +65,13 @@ export default function AuctionsPage() {
       </div>
 
       {loading && <LoadingSpinner />}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <div className="alert alert-error">{error}</div>}
 
       {!loading && !error && auctions.length === 0 && (
-        <p>Inga auktioner hittades.</p>
+        <p style={{ color: "var(--text-muted)" }}>Inga auktioner hittades.</p>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: "1rem",
-        }}
-      >
+      <div className="auction-grid">
         {auctions.map((a) => (
           <AuctionCard key={a.id} auction={a} />
         ))}
