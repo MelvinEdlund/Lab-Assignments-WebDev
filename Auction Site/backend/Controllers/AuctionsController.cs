@@ -39,6 +39,15 @@ public class AuctionsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
+    [HttpGet("mine")]
+    public async Task<IActionResult> GetMine()
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _service.GetMineAsync(userId);
+        return Ok(result);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {

@@ -13,6 +13,18 @@
     }
   ],
   "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "backend"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auctions": {
       "get": {
         "tags": [
@@ -86,6 +98,18 @@
       }
     },
     "/api/Auctions/admin/all": {
+      "get": {
+        "tags": [
+          "Auctions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auctions/mine": {
       "get": {
         "tags": [
           "Auctions"
@@ -625,6 +649,9 @@
     }
   },
   "tags": [
+    {
+      "name": "backend"
+    },
     {
       "name": "Auctions"
     },

@@ -83,4 +83,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+
+app.MapGet("/", () => Results.Text("<div style='height:100vh;display:grid;place-items:center;font:42px system-ui'>Hej api :)</div>", "text/html"));
 app.Run();

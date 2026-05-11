@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import AuctionsPage from "./pages/AuctionsPage";
+import MyAuctionsPage from "./pages/MyAuctionsPage";
 import EditAuctionPage from "./pages/EditAuctionPage";
 import AuctionDetailPage from "./pages/AuctionDetailPage";
 import CreateAuctionPage from "./pages/CreateAuctionPage";
@@ -35,6 +36,14 @@ function App() {
             element={
               <PrivateRoute>
                 <CreateAuctionPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/my-auctions"
+            element={
+              <PrivateRoute>
+                <MyAuctionsPage />
               </PrivateRoute>
             }
           />

@@ -78,8 +78,11 @@ export default function AuctionDetailPage() {
 
   return (
     <div style={{ maxWidth: 800, margin: "0 auto" }}>
-      <Link to="/" style={{ display: "inline-block", marginBottom: "1rem" }}>
-        ← Tillbaka till auktioner
+      <Link
+        to={isOwnAuction ? "/my-auctions" : "/"}
+        style={{ display: "inline-block", marginBottom: "1rem" }}
+      >
+        ← Tillbaka till {isOwnAuction ? "mina auktioner" : "auktioner"}
       </Link>
 
       <h1>{auction.title}</h1>

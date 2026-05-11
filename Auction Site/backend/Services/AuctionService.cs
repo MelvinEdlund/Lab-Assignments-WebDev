@@ -29,6 +29,11 @@ public class AuctionService
         var auctions = await _repo.GetAllAdminAsync();
         return auctions.Select(MapToDto).ToList();
     }
+    public async Task<List<AuctionResponseDto>> GetMineAsync(int userId)
+    {
+        var auctions = await _repo.GetByUserIdAsync(userId);
+        return auctions.Select(MapToDto).ToList();
+    }
 
     public async Task<AuctionResponseDto?> GetByIdAsync(int id)
     {

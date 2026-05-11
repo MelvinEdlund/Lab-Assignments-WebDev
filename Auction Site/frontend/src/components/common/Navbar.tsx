@@ -42,6 +42,11 @@ export default function Navbar() {
               Skapa auktion
             </Link>
           )}
+          {isAuthenticated && (
+            <Link to="/my-auctions" onClick={close}>
+              Mina auktioner
+            </Link>
+          )}
           {isAdmin && (
             <Link to="/admin" onClick={close}>
               Admin

@@ -20,6 +20,11 @@ export const auctionsApi = {
     return res.data;
   },
 
+  getMine: async (): Promise<Auction[]> => {
+    const res = await apiClient.get<Auction[]>("/auctions/mine");
+    return res.data;
+  },
+
   getById: async (id: number): Promise<Auction> => {
     const res = await apiClient.get<Auction>(`/auctions/${id}`);
     return res.data;
