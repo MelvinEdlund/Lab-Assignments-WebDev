@@ -1,13 +1,4 @@
-# Lab-Assignments-WebDev
-
-Detta repo innehåller mina labbar i kursen Webbutveckling.
-
-## Projekt
-
-### [BlackJack](https://github.com/MelvinEdlund/Lab-Assignments-WebDev/tree/main/BlackJack)
-En enkel BlackJack-app byggd med HTML, CSS och JavaScript.
-
-### [Auction Site](https://github.com/MelvinEdlund/Lab-Assignments-WebDev/tree/main/Auction%20Site)
+### Auction Site
 En fullstack-auktionslösning byggd med React och ASP.NET Web API med SQL Server som databas.  
 Applikationen hanterar användare, auktioner och budgivning med JWT-baserad autentisering och rollhantering.
 
