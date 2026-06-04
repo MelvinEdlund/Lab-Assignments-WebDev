@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using backend.Dtos.Auction;
-using backend.Services;
+using backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +10,9 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class AuctionsController : ControllerBase
 {
-    private readonly AuctionService _service;
+    private readonly IAuctionService _service;
 
-    public AuctionsController(AuctionService service)
+    public AuctionsController(IAuctionService service)
     {
         _service = service;
     }

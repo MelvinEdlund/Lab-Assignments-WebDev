@@ -1,16 +1,17 @@
 using backend.Data;
 using backend.Dtos.Auth;
+using backend.Interfaces;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services;
 
-public class AuthService
+public class AuthService : IAuthService
 {
     private readonly AppDbContext _db;
-    private readonly JwtService _jwt;
+    private readonly IJwtService _jwt;
 
-    public AuthService(AppDbContext db, JwtService jwt)
+    public AuthService(AppDbContext db, IJwtService jwt)
     {
         _db = db;
         _jwt = jwt;

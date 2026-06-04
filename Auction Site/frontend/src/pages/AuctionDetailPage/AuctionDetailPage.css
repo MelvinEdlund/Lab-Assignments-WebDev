@@ -1,0 +1,141 @@
+.auction-detail {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.auction-detail-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.auction-detail-edit {
+  margin-bottom: 1rem;
+}
+
+.auction-detail-edit-link {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: #2c3e50;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.auction-detail-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.auction-detail-status-open,
+.auction-detail-status-closed {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.auction-detail-status-open {
+  background: #d4edda;
+  color: #155724;
+}
+
+.auction-detail-status-closed {
+  background: #f1f1f1;
+  color: #555;
+}
+
+.auction-detail-owner {
+  color: #777;
+}
+
+.auction-detail-description {
+  white-space: pre-wrap;
+}
+
+.auction-detail-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.auction-detail-stat-label {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.auction-detail-muted {
+  color: #777;
+}
+
+.auction-detail-history-title {
+  margin-top: 2rem;
+}
+
+.auction-detail-bids {
+  list-style: none;
+  padding: 0;
+}
+
+.auction-detail-bid-row {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auction-detail-bid-tag {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.auction-detail-bid-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.auction-detail-bid-date {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.auction-detail-bid-delete {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.auction-detail-closed {
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.auction-detail-closed-title {
+  margin: 0;
+}
+
+.auction-detail-closed-text {
+  margin: 0.5rem 0 0;
+}
+
+.auction-detail-error {
+  color: red;
+}

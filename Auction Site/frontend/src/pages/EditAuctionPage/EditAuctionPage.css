@@ -1,0 +1,37 @@
+.edit-auction-card {
+  max-width: 560px;
+}
+
+.edit-auction-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.edit-auction-textarea {
+  resize: vertical;
+}
+
+.edit-auction-label-muted {
+  color: var(--text-muted);
+}
+
+.edit-auction-warning {
+  color: var(--danger);
+  margin-top: 0.3rem;
+  display: block;
+}
+
+.edit-auction-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.edit-auction-action-cancel {
+  flex: 1;
+}
+
+.edit-auction-action-submit {
+  flex: 2;
+}

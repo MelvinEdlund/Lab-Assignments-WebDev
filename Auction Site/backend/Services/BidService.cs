@@ -4,7 +4,7 @@ using backend.Models;
 
 namespace backend.Services;
 
-public class BidService
+public class BidService : IBidService
 {
     private readonly IBidRepository _bidRepo;
     private readonly IAuctionRepository _auctionRepo;

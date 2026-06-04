@@ -1,0 +1,44 @@
+.auctions-toolbar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.auctions-toolbar .form-control {
+  flex: 1;
+  min-width: 200px;
+}
+
+.auctions-filter {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.auctions-empty {
+  color: var(--text-muted);
+}
+
+.auctions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .auctions-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .auctions-filter {
+    justify-content: stretch;
+  }
+  .auctions-filter .btn {
+    flex: 1;
+  }
+  .auctions-grid {
+    grid-template-columns: 1fr;
+  }
+}

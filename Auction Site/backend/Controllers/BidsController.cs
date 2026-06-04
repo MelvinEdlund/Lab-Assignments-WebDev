@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using backend.Dtos.Bid;
-using backend.Services;
+using backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +10,9 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class BidsController : ControllerBase
 {
-    private readonly BidService _service;
+    private readonly IBidService _service;
 
-    public BidsController(BidService service)
+    public BidsController(IBidService service)
     {
         _service = service;
     }

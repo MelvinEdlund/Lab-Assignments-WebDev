@@ -1,0 +1,33 @@
+.create-auction-card {
+  max-width: 540px;
+}
+
+.create-auction-textarea {
+  resize: vertical;
+}
+
+.create-auction-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.create-auction-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.create-auction-action-cancel {
+  flex: 1;
+}
+
+.create-auction-action-submit {
+  flex: 2;
+}
+
+@media (max-width: 768px) {
+  .create-auction-dates {
+    grid-template-columns: 1fr;
+  }
+}

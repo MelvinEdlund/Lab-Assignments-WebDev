@@ -1,17 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/common/Navbar";
-import PrivateRoute from "./components/common/PrivateRoute";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import ChangePasswordPage from "./pages/ChangePasswordPage";
-import AuctionsPage from "./pages/AuctionsPage";
-import MyAuctionsPage from "./pages/MyAuctionsPage";
-import EditAuctionPage from "./pages/EditAuctionPage";
-import AuctionDetailPage from "./pages/AuctionDetailPage";
-import CreateAuctionPage from "./pages/CreateAuctionPage";
-import AdminPage from "./pages/AdminPage";
-import NotFoundPage from "./pages/NotFoundPage";
-import "./App.css";
+import Navbar from "./components/common/Navbar/Navbar";
+import PrivateRoute from "./components/common/PrivateRoute/PrivateRoute";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage/ChangePasswordPage";
+import AuctionsPage from "./pages/AuctionsPage/AuctionsPage";
+import MyAuctionsPage from "./pages/MyAuctionsPage/MyAuctionsPage";
+import EditAuctionPage from "./pages/EditAuctionPage/EditAuctionPage";
+import AuctionDetailPage from "./pages/AuctionDetailPage/AuctionDetailPage";
+import CreateAuctionPage from "./pages/CreateAuctionPage/CreateAuctionPage";
+import AdminPage from "./pages/AdminPage/AdminPage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 
 function App() {
   return (

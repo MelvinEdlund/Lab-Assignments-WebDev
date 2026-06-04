@@ -18,11 +18,11 @@ builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
 builder.Services.AddScoped<IBidRepository, BidRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<AuctionService>();
-builder.Services.AddScoped<BidService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuctionService, AuctionService>();
+builder.Services.AddScoped<IBidService, BidService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -73,7 +73,7 @@ var app = builder.Build();
 app.MapOpenApi();
 app.MapScalarApiReference(options =>
 {
-    options.Title = "Auction API";
+    options.Title = "AuctionFlow API";
     options.Theme = ScalarTheme.Moon;
     options.AddPreferredSecuritySchemes("Bearer");
 });
@@ -84,5 +84,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-app.MapGet("/", () => Results.Text("<div style='height:100vh;display:grid;place-items:center;font:42px system-ui'>Hej api :)</div>", "text/html"));
+app.MapGet("/", () => Results.Text("<div style='height:100vh;display:grid;place-items:center;font:42px system-ui'>Hi API :)</div>", "text/html"));
 app.Run();
